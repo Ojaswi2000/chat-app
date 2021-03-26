@@ -1,10 +1,26 @@
 import React from 'react'
+import firebase from 'firebase/app'
 import { Container, Grid, Panel, Row,Col, Button, Icon } from 'rsuite'
+import { auth } from '../misc/firebase'
 
 const SignIn = () => {
+
+    const signInWithProvider = async provider  =>{
+        const result= await auth.signInWithPopup(provider);
+        console.log(result);
+    }
+
+    const onFaceBookSignIn= () => {
+        signInWithProvider( new firebase.auth.FacebookAuthProvider())
+    };
+
+    const onGoogleSignIn = () => {
+        signInWithProvider( new firebase.auth.GoogleAuthProvider())
+    }
+
     return (
         <Container>
-            <Grid>
+            <Grid className="mt-page">
                 <Row>
                     <Col xs={24} md={12} mdOffset={6}>
                         <Panel>
@@ -14,12 +30,12 @@ const SignIn = () => {
                             </div>
 
 
-                            <div>
-                                <Button block color="blue">
+                            <div className="mt-3">
+                                <Button block color="blue" onClick={onFaceBookSignIn} >
                                     <Icon icon="facebook" /> Continue with Facebook
                                 </Button>
 
-                                <Button block color="green">
+                                <Button block color="green" onClick={onGoogleSignIn}>
                                     <Icon icon="Google" /> Continue with Google
                                 </Button>
                             </div>
