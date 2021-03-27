@@ -53,7 +53,7 @@ const SignIn = () => {
                                 </Button>
 
                                 <Button block color="green" onClick={onGoogleSignIn}>
-                                    <Icon icon="Google" /> Continue with Google
+                                    <Icon icon="google" /> Continue with Google
                                 </Button>
                             </div>
                         </Panel>
