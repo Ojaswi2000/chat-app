@@ -68,7 +68,7 @@ const AvatarUploadBtn = () => {
                         </div>
                     </Modal.Body>
                     <Modal.Footer>
-                        <Button block appearance="ghost">
+                        <Button block appearance="ghost" onClick={onUploadClick}>
                             Upload new avatar
                         </Button>
                     </Modal.Footer>
