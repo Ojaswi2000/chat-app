@@ -1,6 +1,8 @@
 import React,{useState} from 'react'
 import { Alert, Button, Modal } from 'rsuite';
 import {useModalState} from '../../misc/custom-hooks';
+import AvatarEditor from 'react-avatar-editor'
+
 
 const fileUploadTypes =".png, .jpeg, .jpg";
 const acceptedFileTypes = ['image/png', 'image/jpeg' , 'image/pjpeg'];
@@ -9,7 +11,7 @@ const isValidFile = (file) => acceptedFileTypes.includes(file.type);
 const AvatarUploadBtn = () => {
 
     const {isOpen,open,close} = useModalState();
-    const [image,setImage]= useState(null);
+    const [img,setImg]= useState(null);
 
     const onFileInputChange= (ev) => {
         const currFiles = ev.target.files;
@@ -18,7 +20,7 @@ const AvatarUploadBtn = () => {
             const file = currFiles[0];
             if(isValidFile(file)){
 
-                setImage(file);
+                setImg(file);
                 open();
 
             }
@@ -52,7 +54,18 @@ const AvatarUploadBtn = () => {
 
                     </Modal.Header>
                     <Modal.Body>
-                        xxx
+                        <div className="d-flex justify-content-center align-items-center h-100">
+                        {img && (
+                            <AvatarEditor
+                            image={img}
+                            width={250}
+                            height={250}
+                            border={50}
+                            borderRadius={100}
+                            rotate={0}
+                          />
+                        )}
+                        </div>
                     </Modal.Body>
                     <Modal.Footer>
                         <Button block appearance="ghost">
