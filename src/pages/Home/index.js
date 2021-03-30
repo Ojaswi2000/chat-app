@@ -8,7 +8,7 @@ import Chat from './Chat'
 
 
 const Home = () => {
-    const isDesktop = useMediaQuery('(min-width : 992 px)');
+    const isDesktop = useMediaQuery('(min-width : 992px)');
     const {isExact} = useRouteMatch();
     const canRenderSidebar = isDesktop || isExact;
 
@@ -26,7 +26,7 @@ const Home = () => {
                 <Switch>
                     <Route exact path="/chat/:chatId">
                         <Col xs={24} md={16} className="h-100">
-                        <Chat/>
+                        <Chat />
                         </Col>
                     </Route>
 

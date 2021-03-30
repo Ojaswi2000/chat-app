@@ -15,7 +15,7 @@ const Sidebar = () => {
             setHeight(topSidebarRef.current.scrollHeight);
         }
 
-    }, [topSidebarRef])
+    }, [topSidebarRef]);
 
     return (
         <div className="h-100 pt-2">
