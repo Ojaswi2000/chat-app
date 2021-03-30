@@ -1,4 +1,5 @@
 import React from 'react'
+import { Divider } from 'rsuite'
 import CreateRoomBtnModal from './CreateRoomBtnModal'
 import DashboardToggle from './dashboard/DashboardToggle'
 
@@ -8,6 +9,7 @@ const Sidebar = () => {
             <div>
                 <DashboardToggle />
                 <CreateRoomBtnModal />
+                <Divider>Join Conversation</Divider>
             </div>
             
             Bottom text
