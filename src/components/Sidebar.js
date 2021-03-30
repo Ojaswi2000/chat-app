@@ -2,6 +2,7 @@ import React from 'react'
 import { Divider } from 'rsuite'
 import CreateRoomBtnModal from './CreateRoomBtnModal'
 import DashboardToggle from './dashboard/DashboardToggle'
+import ChatRoomList from './rooms/ChatRoomList'
 
 const Sidebar = () => {
     return (
@@ -12,7 +13,7 @@ const Sidebar = () => {
                 <Divider>Join Conversation</Divider>
             </div>
             
-            Bottom text
+            <ChatRoomList />
         </div>
     )
 }
