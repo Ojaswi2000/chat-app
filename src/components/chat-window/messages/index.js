@@ -26,7 +26,7 @@ const Messages = () => {
     return (
         <ul className="msg-list custom-scroll">
             {isChatEmpty && <li>No messages yet...</li>}
-            {canShowMessages && messages.map(msg=> <MessageItem  key={msg.id} messages={msg} />)}
+            {canShowMessages && messages.map(msg=> <MessageItem  key={msg.id} message={msg} />)}
             
         </ul>
     )
