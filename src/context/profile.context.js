@@ -45,7 +45,7 @@ export const ProfileProvider = ({children}) => {
 
                 database.ref('.info/connected').on('value',(snapshot)=> {
                     // If we're not currently connected, don't do anything.
-                    if (snapshot.val() === false) {
+                    if (!!snapshot.val() === false) {
                         return;
                     };
                     userStatusRef.onDisconnect().set(isOfflineForDatabase).then(() => {
@@ -62,6 +62,7 @@ export const ProfileProvider = ({children}) => {
                 if(userStatusRef){
                     userStatusRef.off();
                 }
+                database.ref('./info/connected').off();
                 setProfile(null);
                 setIsLoading(false);
             }
@@ -69,6 +70,7 @@ export const ProfileProvider = ({children}) => {
         });
         return ()=>{
             authUnsub();
+            database.ref('./info/connected').off();
             if(userRef){
                 userRef.off();
             }
