@@ -2,13 +2,13 @@ import React from 'react'
 import { useParams } from 'react-router';
 import { Alert, Button, Drawer } from 'rsuite'
 import { useCurrentRoom } from '../../../context/current-room.context';
-import { useModalState } from '../../../misc/custom-hooks'
+import { useMediaQuery, useModalState } from '../../../misc/custom-hooks'
 import { database } from '../../../misc/firebase';
 import EditableInput from '../../EditableInput';
 
 const EditRoomBtnDrawer = () => {
     const {isOpen,open,close} = useModalState();
-
+    const isMobile= useMediaQuery('(max-width: 992px)')
     const {chatId}= useParams();
     const name = useCurrentRoom(v => v.name);
     const description = useCurrentRoom(v => v.description);
@@ -32,7 +32,7 @@ const EditRoomBtnDrawer = () => {
             <Button className="br-circle" size="sm" color="red" onClick={open}>
                 Edit
             </Button>
-            <Drawer show={isOpen} onHide={close} placement="right">
+            <Drawer full={isMobile} show={isOpen} onHide={close} placement="right">
                 <Drawer.Header>
                     <Drawer.Title>
                     Edit Room
