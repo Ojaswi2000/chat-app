@@ -35,3 +35,7 @@ export function tranformToArrayWithId(snapVal){
 
     return updates;
 }
+
+export function transformToArr(snapVal){
+    return snapVal ? Object.keys(snapVal) : []
+}
