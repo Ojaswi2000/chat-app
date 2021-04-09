@@ -40,6 +40,13 @@ const MessageItem = ({message,handleAdmin}) => {
                 <TimeAgo
                     datetime={createdAt} className="font-normal text-black-45 ml-2"
                 />
+                <IconBtnControl 
+                isVisible
+                iconName="heart"
+                tooltip="Like this message"
+                onClick={()=>{}}
+                badgeContent={5}
+                />
             </div>
 
             <div>
