@@ -19,7 +19,7 @@ const IconBtnControl = ({isVisible,iconName,tooltip,badgeContent,onClick,...prop
                 >
                     <IconButton 
                     {...props}
-                    onClick={onclick}
+                    onClick={onClick}
                     circle
                     size="xs"
                     icon={<Icon icon={iconName}/>}
