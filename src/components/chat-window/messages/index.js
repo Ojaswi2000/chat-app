@@ -50,6 +50,31 @@ const Messages = () => {
 
     },[])
 
+    const handleDelete = useCallback(async(msgId)=>{
+        if(!window.confirm("Delete this message")){
+            return;
+        }
+        const isLast=messages[messages.length-1].id===msgId;
+        const updates={};
+        updates[`/messages/${msgId}`]=null;
+        if (isLast && messages.length>1){
+            updates[`/rooms/${chatId}/lastMessage`]={
+                ...messages[messages.length-2],
+                msgId:messages[messages.length-2].id
+            }
+        }
+        if(isLast && messages.length===1){
+            updates[`/rooms/${chatId}/lastMessage`]=null;
+        }
+        try {
+            await database.ref().update(updates);
+            Alert.info("Message has been deleted");
+        } catch (err) {
+            Alert.error(err.message,4000);
+        }
+
+    },[chatId,messages])
+
     const handleAdmin = useCallback(async (uid) => {
             const adminsRef=database.ref(`/rooms/${chatId}/admins`);
             let alertMsg;
@@ -73,7 +98,9 @@ const Messages = () => {
         <ul className="msg-list custom-scroll">
             {isChatEmpty && <li>No messages yet...</li>}
             {canShowMessages && messages.map(msg=> <MessageItem  key={msg.id} message={msg} handleAdmin={handleAdmin}
-            handleLike={handleLike} />)}
+            handleLike={handleLike} 
+            handleDelete={handleDelete}
+            />)}
             
         </ul>
     )
