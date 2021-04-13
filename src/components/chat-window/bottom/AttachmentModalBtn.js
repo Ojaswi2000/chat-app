@@ -1,9 +1,16 @@
-import React from 'react'
-import { Button, Icon, InputGroup, Modal } from 'rsuite'
+import React,{useState} from 'react'
+import { Button, Icon, InputGroup, Modal, Uploader } from 'rsuite'
 import {useModalState} from '../../../misc/custom-hooks'
+
+const MAX_FILE_SIZE = 1000*1024*5
 
 const AttachmentModalBtn = () => {
     const {isOpen,open,close} = useModalState();
+    const [fileList,setFileList]= useState([]);
+    const onChange=(fileArr)=>{
+        const filtered= fileArr.filter(el => el.blobFile.size <= MAX_FILE_SIZE).slice(0,5);
+        setFileList(filtered);
+    }
     return (
         <>
             <InputGroup.Button onClick={open}>
@@ -17,7 +24,14 @@ const AttachmentModalBtn = () => {
                     </Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                hello
+                <Uploader
+                autoUpload={false}
+                action=""
+                fileList={fileList}
+                onChange={onChange}
+                multiple
+                listType="picture-text"
+                />
                 </Modal.Body>
                 <Modal.Footer>
                 <Button block>
