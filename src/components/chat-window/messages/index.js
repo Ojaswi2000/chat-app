@@ -92,7 +92,7 @@ const Messages = () => {
             });
             Alert.info(alertMsg, 4000);
         },
-        [],
+        [chatId],
     )
     return (
         <ul className="msg-list custom-scroll">
