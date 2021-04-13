@@ -31,6 +31,7 @@ const AttachmentModalBtn = () => {
                 onChange={onChange}
                 multiple
                 listType="picture-text"
+                className="w-100"
                 />
                 </Modal.Body>
                 <Modal.Footer>
