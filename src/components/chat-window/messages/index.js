@@ -1,29 +1,41 @@
-import React,{useState,useEffect,useCallback} from 'react'
+import React,{useState,useEffect,useCallback,useRef} from 'react'
 import { auth, database, storage } from '../../../misc/firebase';
 import { useParams } from 'react-router';
-import { Alert } from 'rsuite';
+import { Alert, Button } from 'rsuite';
 import { groupBy, tranformToArrayWithId } from '../../../misc/helpers';
 import MessageItem from './MessageItem';
+
+const PAGE_SIZE= 15
+const messagesRef= database.ref('/messages');
+
 
 const Messages = () => {
     const {chatId} = useParams();
     const [messages,setMessages]= useState(null);
+    const [limit,setLimit]= useState(PAGE_SIZE);
+    const selfRef=useRef();
     const isChatEmpty = messages && messages.length===0;
     const canShowMessages= messages && messages.length>0;
-
-    useEffect(() => {
-        const messagesRef= database.ref('/messages');
-        
-        messagesRef.orderByChild('roomId').equalTo(chatId).on('value',(snap)=>{
+    const loadMessages= useCallback((limitToLast)=>{
+        messagesRef.off();
+        messagesRef.orderByChild('roomId').equalTo(chatId).limitToLast(limitToLast || PAGE_SIZE).on('value',(snap)=>{
             const data= tranformToArrayWithId(snap.val());
             setMessages(data);
-        })
         
-        return ()=>{
+    });
+    setLimit(p => !p + PAGE_SIZE)
+    },[chatId])
+    const onLoadMore= useCallback(()=>{
+        loadMessages(limit);
+    },[loadMessages,limit])
+
+    useEffect(() => {
+        loadMessages();
+       return ()=>{
             messagesRef.off('value');
         }
         
-    }, [chatId]);
+    }, [chatId,loadMessages]);
 
     const handleLike = useCallback(async(msgId)=>{
         const {uid}=auth.currentUser;
@@ -122,12 +134,17 @@ const Messages = () => {
             
     }
     return (
-        <ul className="msg-list custom-scroll">
+        <ul ref={selfRef} className="msg-list custom-scroll">
+            {messages && messages.length>=PAGE_SIZE && (
+                <li className="text-center mt-2 mb-2">
+                    <Button onClick={onLoadMore} color="green" >Load More</Button>
+                </li>
+            )}
             {isChatEmpty && <li>No messages yet...</li>}
             {canShowMessages && renderMessages()}
             
         </ul>
     )
-}
 
+    }
 export default Messages
