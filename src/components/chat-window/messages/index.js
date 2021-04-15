@@ -8,6 +8,11 @@ import MessageItem from './MessageItem';
 const PAGE_SIZE= 15
 const messagesRef= database.ref('/messages');
 
+function shouldScrollToBottom(node,threshold = 30){
+    const percentage= (100* node.scrollTop)/(node.scrollHeight- node.clientHeight) || 0;
+    return percentage >threshold;
+}
+
 
 const Messages = () => {
     const {chatId} = useParams();
@@ -17,20 +22,39 @@ const Messages = () => {
     const isChatEmpty = messages && messages.length===0;
     const canShowMessages= messages && messages.length>0;
     const loadMessages= useCallback((limitToLast)=>{
+        const node=selfRef.current;
         messagesRef.off();
         messagesRef.orderByChild('roomId').equalTo(chatId).limitToLast(limitToLast || PAGE_SIZE).on('value',(snap)=>{
             const data= tranformToArrayWithId(snap.val());
             setMessages(data);
+
+            if(shouldScrollToBottom(node)){
+                node.scrollTop= node.scrollHeight;
+            }
         
     });
     setLimit(p => !p + PAGE_SIZE)
     },[chatId])
     const onLoadMore= useCallback(()=>{
+
+        const node=selfRef.current;
+        const oldHeight=selfRef.scrollHeight;
         loadMessages(limit);
+
+        setTimeout(() => {
+            const newHeight=selfRef.scrollHeight;
+
+            node.scrollTop=newHeight-oldHeight;
+        }, 200);
     },[loadMessages,limit])
 
     useEffect(() => {
+        const node= selfRef.current;
         loadMessages();
+
+        setTimeout(() => {
+            node.scrollTop=node.scrollHeight;
+        }, 200);
        return ()=>{
             messagesRef.off('value');
         }
