@@ -1,8 +1,8 @@
 import React,{useState,useEffect,useCallback} from 'react'
-import { auth, database } from '../../../misc/firebase';
+import { auth, database, storage } from '../../../misc/firebase';
 import { useParams } from 'react-router';
 import { Alert } from 'rsuite';
-import { tranformToArrayWithId } from '../../../misc/helpers';
+import { groupBy, tranformToArrayWithId } from '../../../misc/helpers';
 import MessageItem from './MessageItem';
 
 const Messages = () => {
@@ -50,7 +50,7 @@ const Messages = () => {
 
     },[])
 
-    const handleDelete = useCallback(async(msgId)=>{
+    const handleDelete = useCallback(async(msgId,file)=>{
         if(!window.confirm("Delete this message")){
             return;
         }
@@ -70,7 +70,17 @@ const Messages = () => {
             await database.ref().update(updates);
             Alert.info("Message has been deleted");
         } catch (err) {
-            Alert.error(err.message,4000);
+            return Alert.error(err.message,4000);
+        }
+
+        if(file){
+            try {
+                const fileRef = storage.refFromURL(file.url);
+                await fileRef.delete();
+            } catch (err) {
+                Alert.error(err.message,4000);
+                
+            }
         }
 
     },[chatId,messages])
@@ -94,13 +104,27 @@ const Messages = () => {
         },
         [chatId],
     )
+    const renderMessages = () =>{
+            const groups= groupBy(messages, (item)=> new Date(item.createdAt).toDateString())
+            let items=[]
+            Object.keys(groups).forEach((date)=>{
+                items.push(<li key={date} className="text-center mb-1 padded">{date}</li>)
+                const msgs=groups[date].map(msg => (
+                   <MessageItem  key={msg.id} message={msg} handleAdmin={handleAdmin}
+                        handleLike={handleLike} 
+                        handleDelete={handleDelete}
+                   />)
+                )
+                items.push(...msgs);
+
+            })
+            return items;
+            
+    }
     return (
         <ul className="msg-list custom-scroll">
             {isChatEmpty && <li>No messages yet...</li>}
-            {canShowMessages && messages.map(msg=> <MessageItem  key={msg.id} message={msg} handleAdmin={handleAdmin}
-            handleLike={handleLike} 
-            handleDelete={handleDelete}
-            />)}
+            {canShowMessages && renderMessages()}
             
         </ul>
     )
